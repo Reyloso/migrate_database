@@ -6,9 +6,6 @@
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
   <p align="center">Migrar Base de datos
-    <p align="center">
-
-    </p>
 </p>
 
 ## Description

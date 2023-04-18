@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
-import { DatabasesService } from './databases.service';
-import { CreateDatabaseDto } from './dto/create-database.dto';
-import { UpdateDatabaseDto } from './dto/update-database.dto';
+import { DatabasesService, MigrateService } from './databases.service';
+import { CreateDatabaseDto, CreateMigrateLogDto } from './dto/create-database.dto';
+import { UpdateDatabaseDto, UpdateMigrateLogDto } from './dto/update-database.dto';
 
 @Controller('databases')
 export class DatabasesController {
@@ -31,4 +31,26 @@ export class DatabasesController {
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.databasesService.remove(id);
   }
+}
+
+@Controller('Migrate')
+export class MigrateController {
+  constructor(private readonly MigrateService: MigrateService) {}
+
+  @Post()
+  create(@Body() createMigrateLogDto: CreateMigrateLogDto) {
+
+    return this.MigrateService.create(createMigrateLogDto);
+  }
+
+  @Get()
+  findAll() {
+    return this.MigrateService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.MigrateService.findOne(id);
+  }
+
 }

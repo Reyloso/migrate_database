@@ -66,3 +66,26 @@ export class Database extends Model {
     @DeletedAt
     deleted_at: Date;
 }
+
+
+@Table
+export class MigrateLog extends Model {
+
+    @PrimaryKey
+    @Default(uuid)
+    @Column({
+        type: DataType.UUID,
+        defaultValue: uuid,
+    })
+    id:string;
+
+    @Column({
+        type: DataType.TEXT,
+        allowNull:false,
+    })
+    database:JSON
+
+    @CreatedAt
+    created_at: Date;
+
+}

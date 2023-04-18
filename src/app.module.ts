@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { MigrateModule } from './migrate/migrate.module';
-import { EmployeesModule } from './employees/employees.module';
 import { DatabasesModule } from './databases/databases.module';
 
 @Module({
@@ -18,9 +16,7 @@ import { DatabasesModule } from './databases/databases.module';
       autoLoadModels:true,
       synchronize:true
     }),
-    DatabasesModule,
-    MigrateModule,
-    EmployeesModule,
+    DatabasesModule
   ],
   controllers: [],
   providers: [],

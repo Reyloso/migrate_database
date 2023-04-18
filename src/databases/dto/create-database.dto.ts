@@ -1,4 +1,4 @@
-import { IsBoolean, IsDate, IsIn, IsNumber, IsOptional, IsPositive, IsString, IsUUID, MinLength } from "class-validator";
+import { IsBoolean, IsDate, IsIn, IsJSON, IsNumber, IsOptional, IsPositive, IsString, IsUUID, MinLength } from "class-validator";
 
 export class CreateDatabaseDto {
 
@@ -36,6 +36,22 @@ export class CreateDatabaseDto {
 
     @MinLength(1)
     extraction_query:string
+
+    @IsDate()
+    @IsOptional()
+    updated_at?:Date
+
+}
+
+
+export class CreateMigrateLogDto {
+
+    @IsUUID()
+    @IsOptional()
+    id?:string
+
+    @IsJSON()
+    database:JSON
 
     @IsDate()
     @IsOptional()

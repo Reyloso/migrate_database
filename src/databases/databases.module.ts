@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { DatabasesService } from './databases.service';
-import { DatabasesController } from './databases.controller';
+import { DatabasesService, MigrateService } from './databases.service';
+import { DatabasesController, MigrateController } from './databases.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Database } from './entities/database.entity';
+import { Database, MigrateLog } from './entities/database.entity';
 
 @Module({
-  controllers: [DatabasesController],
-  providers: [DatabasesService],
-  imports: [SequelizeModule.forFeature([Database])],
+  controllers: [DatabasesController, MigrateController],
+  providers: [DatabasesService, MigrateService],
+  imports: [SequelizeModule.forFeature([Database, MigrateLog])],
 })
 export class DatabasesModule {}

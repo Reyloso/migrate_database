@@ -1,93 +1,68 @@
-import { validate } from "class-validator";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, Model, PrimaryKey, Table, Default, DataType, CreatedAt, UpdatedAt, DeletedAt  } from "sequelize-typescript";
+import { v4 as uuid } from 'uuid';
 
-class ObjectJSON {
-    table_name: string;
-    fields_list: JSON;
-}
-  
-class ObjectJSONTransformer {
-    to(value: ObjectJSON): Record<string, any> {
-        return value;
-    }
-  
-    from(value: Record<string, any>): ObjectJSON {
-        const objectJSON = new ObjectJSON();
-        objectJSON.table_name = value.table_name;
-        objectJSON.fields_list = value.fields_list;
-
-        validate(objectJSON).then((errors) => {
-            if (errors.length > 0) {
-                throw new Error(`Objeto JSON no válido: ${JSON.stringify(errors)}`);
-            }
-        });
-
-        return objectJSON;
-    }
-}
-
-
-@Entity()
-export class Database {
+@Table
+export class Database extends Model {
     
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryKey
+    @Default(uuid)
+    @Column({
+        type: DataType.UUID,
+        defaultValue: uuid,
+    })
     id:string;
 
-    @Column('varchar', {
-    length: 100,
-    default:'postgres',
-    nullable:false,
+    @Column({
+        type: 'VARCHAR(50)',
+        allowNull:false,
     })
     database_engine:string
 
-    @Column('varchar', {
-    length: 100,
-    nullable:false,
+    @Column({
+        type: 'VARCHAR(100)',
+        allowNull:false,
     })
     database_name:string
-   
-    @Column('varchar', {
-    length: 30,
-    nullable:false,
+
+    @Column({
+        type: 'VARCHAR(50)',
+        allowNull:false,
     })
     database_username:string
 
-    @Column('varchar', {
-    length: 50,
-    nullable:false,
+    @Column({
+        type: 'VARCHAR(85)',
+        allowNull:false,
     })
     database_password:string
-   
-    @Column('varchar', {
-    length: 80,
-    nullable:false,
+
+    @Column({
+        type: 'VARCHAR(50)',
+        allowNull:false,
     })
     database_host:string
 
-    @Column('numeric',{
-        nullable:false,
+    @Column({
+        type: DataType.INTEGER,
+        allowNull:false,
     })
     database_port:Number
 
     @Column({
-        type: 'json',
-        nullable:false,
-        transformer: new ObjectJSONTransformer(),
+        type: DataType.TEXT,
+        allowNull:false
     })
-    table_extraction_configuration_json:ObjectJSON 
+    extraction_query:string 
 
-    @Column('boolean',{
-        nullable:false,
-        default:true
-    })
+    @Column({ defaultValue: true})
     status:Boolean
 
-    @CreateDateColumn()
+    @CreatedAt
     created_at: Date;
     
-    @UpdateDateColumn()
+    @UpdatedAt
     updated_at: Date; 
 
-    @DeleteDateColumn()
+    @DeletedAt
     deleted_at: Date;
 }

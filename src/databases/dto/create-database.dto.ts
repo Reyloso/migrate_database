@@ -1,16 +1,5 @@
 import { IsArray, IsBoolean, IsDate, IsIn, IsJSON, IsNumber, IsOptional, IsPositive, IsString, IsUUID, MinLength } from "class-validator";
 
-
-class ObjectJSON {
-    @IsString()
-    @MinLength(1)
-    table_name: string;
-
-    @IsString({ each:true })
-    @IsArray()
-    fields_list: JSON;
-}
-
 export class CreateDatabaseDto {
 
     @IsUUID()
@@ -45,15 +34,11 @@ export class CreateDatabaseDto {
     @IsOptional()
     status?:Boolean
 
-    @IsJSON()
-    table_extraction_configuration_json:ObjectJSON
+    @MinLength(1)
+    extraction_query:string
 
     @IsDate()
     @IsOptional()
     updated_at?:Date
-
-    @IsDate()
-    @IsOptional()
-    deleted_at?:Date
 
 }

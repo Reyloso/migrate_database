@@ -1,0 +1,154 @@
+{
+	"info": {
+		"_postman_id": "fe1db26b-22ad-415e-991e-8bd3ef9b658e",
+		"name": "migrate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19735258"
+	},
+	"item": [
+		{
+			"name": "obtener todas la bases de datos configuradas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/databases",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"databases"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "obtener logs de transacciones",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/migrate",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"migrate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "obtener detalle de una database",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/databases/a27d9a57-43f4-4fc4-bf50-a1d2cfd135d6",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"databases",
+						"a27d9a57-43f4-4fc4-bf50-a1d2cfd135d6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "crear configuracion de base de datos",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"database_engine\":\"postgres\",\r\n    \"database_name\":\"main_migration\",\r\n    \"database_username\":\"postgres\",\r\n    \"database_password\":\"123456\",\r\n    \"database_host\":\"localhost\",\r\n    \"database_port\":5432,\r\n    \"extraction_query\":\"select * from tblprueba\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/databases",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"databases"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "editar configuracion de base de datos Copy",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"database_engine\":\"postgres\",\r\n    \"database_name\":\"main_migration\",\r\n    \"database_username\":\"postgres\",\r\n    \"database_password\":\"123456\",\r\n    \"database_host\":\"localhost\",\r\n    \"database_port\":5432,\r\n    \"extraction_query\":\"select * from tblprueba\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/databases/a27d9a57-43f4-4fc4-bf50-a1d2cfd135d6",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"databases",
+						"a27d9a57-43f4-4fc4-bf50-a1d2cfd135d6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "eliminar  configuracion de base de datos",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"database_engine\":\"postgres\",\r\n    \"database_name\":\"main_migration\",\r\n    \"database_username\":\"postgres\",\r\n    \"database_password\":\"123456\",\r\n    \"database_host\":\"localhost\",\r\n    \"database_port\":5432,\r\n    \"extraction_query\":\"select * from tblprueba\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/databases/a27d9a57-43f4-4fc4-bf50-a1d2cfd135d6",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"databases",
+						"a27d9a57-43f4-4fc4-bf50-a1d2cfd135d6"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

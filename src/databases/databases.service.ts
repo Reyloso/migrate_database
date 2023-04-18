@@ -2,26 +2,23 @@ import { Delete, Injectable, InternalServerErrorException, Param, ParseUUIDPipe 
 import { CreateDatabaseDto } from './dto/create-database.dto';
 import { UpdateDatabaseDto } from './dto/update-database.dto';
 import { Database } from './entities/database.entity';
+import { InjectModel } from '@nestjs/sequelize';
 
 
 @Injectable()
 export class DatabasesService {
 
   constructor(
-
-    // @InjectRepository(Database)
-    // private readonly DatabaseRepository: Repository<Database>,
+    @InjectModel(Database)
+    private readonly DatabaseModel: typeof Database,
 
   ){}
 
   async create(createDatabaseDto: CreateDatabaseDto) {
     try{
+      const database = await this.DatabaseModel.create({...createDatabaseDto});
 
-      // const database = this.DatabaseRepository.create(createDatabaseDto);
-
-      // await this.DatabaseRepository.save(database)
-
-      // return {"message":"database creada correctamente", "code":1, "data":database}
+      return {"message":"database creada correctamente", "code":1, "data":database}
 
     }catch(error){
 
@@ -34,13 +31,13 @@ export class DatabasesService {
   async findAll() {
     try{
 
-      // const database = await this.DatabaseRepository.find({where : {status:true, deleted_at:null}})
+      const database = await this.DatabaseModel.findAll({where : {status:true, deleted_at:null}})
 
-      // if (database.length === 0){
-      //   return {"message":"no se encontraron registros", "code":2, "data":null}
-      // }
+      if (database.length === 0){
+        return {"message":"no se encontraron registros", "code":2, "data":null}
+      }
 
-      // return {"message":"lista de databases", "code":1, "data":database}
+      return {"message":"lista de databases", "code":1, "data":database}
 
     }catch(error){
 
@@ -51,12 +48,12 @@ export class DatabasesService {
   async findOne(@Param('id', ParseUUIDPipe) id:string) {
     try{
 
-      // const database = await this.DatabaseRepository.findOne({where : {id: id, status:true, deleted_at:null}})
+      const database = await this.DatabaseModel.findOne({where : {id: id, status:true, deleted_at:null}})
 
-      // if ( !database )
-      //   return {"message":`no se encontro una database con el id ${id}`, "code":2, "data":null}
+      if ( !database )
+        return {"message":`no se encontro una database con el id ${id}`, "code":2, "data":null}
 
-      // return {"message":"detalle de database", "code":1, "data":database}
+      return {"message":"detalle de database", "code":1, "data":database}
       
     }catch(error){
 
@@ -68,13 +65,13 @@ export class DatabasesService {
   async update(@Param('id', ParseUUIDPipe) id:string, updateDatabaseDto: UpdateDatabaseDto) {
     try{
 
-      // const database = await this.DatabaseRepository.update(id, updateDatabaseDto);
-      // if ( !database )
-      //   return {"message":`no se encontro una database con el id ${id}`, "code":2, "data":null}
+      const database = await this.DatabaseModel.update(updateDatabaseDto ,{where : {id: id}});
+      if ( !database )
+        return {"message":`no se encontro una database con el id ${id}`, "code":2, "data":null}
 
-      // const data = await this.DatabaseRepository.findOne({where : {id: id, deleted_at:null}})
+      const data = await this.DatabaseModel.findOne({where : {id: id, deleted_at:null}})
 
-      // return {"message":"database actualizada correctamente", "code":1, "data":data}
+      return {"message":"database actualizada correctamente", "code":1, "data":data}
 
     }catch(error){
 
@@ -87,14 +84,14 @@ export class DatabasesService {
   async remove(@Param('id', ParseUUIDPipe) id:string) {
     try{
 
-      // const database = this.DatabaseRepository.findOne({where : {id: id, deleted_at:null}})
+      const database = this.DatabaseModel.findOne({where : {id: id, deleted_at:null}})
 
-      // if ( !database )
-      //   return {"message":`no se encontro una database con el id ${id}`, "code":2, "data":null}
+      if ( !database )
+        return {"message":`no se encontro una database con el id ${id}`, "code":2, "data":null}
 
-      // await this.DatabaseRepository.softDelete(id)
+      await this.DatabaseModel.destroy({where : {id: id, deleted_at:null}})
 
-      // return {"message":"registro eliminado correctamente", "code":1, "data":null}
+      return {"message":"registro eliminado correctamente", "code":1, "data":null}
 
     }catch(error){
 

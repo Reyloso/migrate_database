@@ -66,7 +66,6 @@ export class DatabasesService {
     }
   }
 
-
   async update(@Param('id', ParseUUIDPipe) id:string, updateDatabaseDto: UpdateDatabaseDto) {
     try{
 
@@ -74,7 +73,9 @@ export class DatabasesService {
       if ( !database )
         return {"message":`no se encontro una database con el id ${id}`, "code":2, "data":null}
 
-      return {"message":"database actualizada correctamente", "code":1, "data":database}
+      const data = await this.DatabaseRepository.findOne({where : {id: id, deleted_at:null}})
+
+      return {"message":"database actualizada correctamente", "code":1, "data":data}
 
     }catch(error){
 

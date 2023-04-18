@@ -1,5 +1,4 @@
-import { IsArray, IsBoolean, IsDate, IsJSON, IsNumber, IsOptional, IsPositive, IsString, IsUUID, MinLength } from "class-validator";
-
+import { IsArray, IsBoolean, IsDate, IsIn, IsJSON, IsNumber, IsOptional, IsPositive, IsString, IsUUID, MinLength } from "class-validator";
 
 
 class ObjectJSON {
@@ -9,7 +8,7 @@ class ObjectJSON {
 
     @IsString({ each:true })
     @IsArray()
-    fields_list: string[];
+    fields_list: JSON;
 }
 
 export class CreateDatabaseDto {
@@ -17,6 +16,10 @@ export class CreateDatabaseDto {
     @IsUUID()
     @IsOptional()
     id?:string
+
+    @IsIn(['postgres','mysql','sqlite','mssql'])
+    @IsOptional()
+    database_engine?:string
 
     @IsString()
     @MinLength(5)

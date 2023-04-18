@@ -3,7 +3,7 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedCol
 
 class ObjectJSON {
     table_name: string;
-    fields_list: string[];
+    fields_list: JSON;
 }
   
 class ObjectJSONTransformer {
@@ -32,6 +32,13 @@ export class Database {
     
     @PrimaryGeneratedColumn('uuid')
     id:string;
+
+    @Column('varchar', {
+    length: 100,
+    default:'postgres',
+    nullable:false,
+    })
+    database_engine:string
 
     @Column('varchar', {
     length: 100,

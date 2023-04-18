@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateMigrateDto } from './dto/create-migrate.dto';
+import { CreateMigrateLogDto } from './dto/create-migrate.dto';
 import { UpdateMigrateDto } from './dto/update-migrate.dto';
 
 @Injectable()
 export class MigrateService {
-  create(createMigrateDto: CreateMigrateDto) {
+  create(createMigrateDto: CreateMigrateLogDto) {
     return 'This action adds a new migrate';
   }
 

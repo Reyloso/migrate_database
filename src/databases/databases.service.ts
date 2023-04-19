@@ -57,7 +57,7 @@ export class DatabasesService {
       
     }catch(error){
 
-      throw new InternalServerErrorException("No se pudo crear el objeto", error)
+      return {"message":"no se pudo crear database", "code":2, "data":null}
 
     }
   }

@@ -37,10 +37,10 @@ export class DatabasesController {
 export class MigrateController {
   constructor(private readonly MigrateService: MigrateService) {}
 
-  @Post()
-  create(@Body() createMigrateLogDto: CreateMigrateLogDto) {
+  @Post(':id_database')
+  create(@Body() @Param('id_database', ParseUUIDPipe) id_database: string) {
 
-    return this.MigrateService.create(createMigrateLogDto);
+    return this.MigrateService.create(id_database);
   }
 
   @Get()

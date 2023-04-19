@@ -81,7 +81,7 @@ export class InvoicesService {
     }
   }
 
-  async remove(id: number) {
+  async remove(@Param('id', ParseUUIDPipe) id:string) {
     try{
 
       const database = this.InvoiceModel.findOne({where : {id: id, deleted_at:null}})

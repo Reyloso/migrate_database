@@ -2,7 +2,10 @@ import { Injectable, InternalServerErrorException, Param, ParseUUIDPipe } from '
 import { CreateDatabaseDto, CreateMigrateLogDto } from './dto/create-database.dto';
 import { UpdateDatabaseDto, UpdateMigrateLogDto } from './dto/update-database.dto';
 import { Database, Migratelog } from './entities/database.entity';
+import { Invoice } from 'src/invoices/entities/invoice.entity';
 import { InjectModel } from '@nestjs/sequelize';
+import { Sequelize } from 'sequelize';
+import { Dialect } from 'sequelize/types';
 
 
 @Injectable()
@@ -109,14 +112,52 @@ export class MigrateService {
   constructor(
     @InjectModel(Migratelog)
     private readonly MigrateModel: typeof Migratelog,
+    @InjectModel(Database)
+    private readonly DatabaseModel: typeof Database,
+    // @InjectModel(Invoice)
+    // private readonly InvoiceModel: typeof Invoice,
 
   ){}
 
-  async create(createMigrateLogDto: CreateMigrateLogDto) {
+  async create(@Param('id_database', ParseUUIDPipe) id:string) {
     try{
-      const migrateLog = await this.MigrateModel.create({...createMigrateLogDto});
+      
+      // consultando database en la base de datos
+      const database = await this.DatabaseModel.findOne({where : {id: id, status:true, deleted_at:null}})
 
-      return {"message":"[Migrate_log] creada correctamente", "code":1, "data":migrateLog}
+      // validando si existe el registro
+      if(!database)
+        return {"message":`no se encontro una [Databse] con el id ${id} para realizar esta migracion`, "code":2, "data":null}
+
+      let result = []
+
+      // instanciando una conexion con las configuraciones dinamicas que viene del modelo
+      const sequelize_conection = new Sequelize(
+        `${database.database_name}`,
+         `${database.database_username}`,
+         `${database.database_password}`, {
+        host: `${database.database_host}`,
+        dialect: `${database.database_engine}` as Dialect
+      });
+      
+      // ejecutando query de forma dinamica
+      const cursor = await sequelize_conection.query(database.extraction_query).then(([results, metadata]) => {
+        console.log("result ", results)
+        result =results
+      }).catch(error => {
+        console.error('Error executing query:', error);
+        return {"message":`ha ocurrido un error al ejecutar el query: ${error} `, "code":2, "data":null}
+      });;
+
+      // vaciando la tabla invoice para insertar los nuevos registros
+      await Invoice.destroy({
+        where: {},
+        truncate: true
+      })
+      // insertando nueva data 
+      const invoices = await Invoice.bulkCreate(result)
+  
+      return invoices;
 
     }catch(error){
 
@@ -157,45 +198,6 @@ export class MigrateService {
 
       throw new InternalServerErrorException("No se pudo crear el objeto", error)
 
-    }
-  }
-
-  async update(@Param('id', ParseUUIDPipe) id:string, updateMigrateLogDto: CreateMigrateLogDto) {
-    try{
-
-      const migrateLog = await this.MigrateModel.update(updateMigrateLogDto ,{where : {id: id}});
-      if ( !migrateLog )
-        return {"message":`no se encontro una [Migrate_log] con el id ${id}`, "code":2, "data":null}
-
-      const data = await this.MigrateModel.findOne({where : {id: id, deleted_at:null}})
-
-      return {"message":"[Migrate_log] actualizada correctamente", "code":1, "data":data}
-
-    }catch(error){
-
-      console.log(error)
-
-      return {"message":"no se pudo actualizar [Migrate_log]", "code":2, "data":null}
-    }
-  }
-  
-  async remove(@Param('id', ParseUUIDPipe) id:string) {
-    try{
-
-      const migrateLog = this.MigrateModel.findOne({where : {id: id, deleted_at:null}})
-
-      if ( !migrateLog )
-        return {"message":`no se encontro una [Migrate_log] con el id ${id}`, "code":2, "data":null}
-
-      await this.MigrateModel.destroy({where : {id: id, deleted_at:null}})
-
-      return {"message":"[Migrate_log] eliminado correctamente", "code":1, "data":null}
-
-    }catch(error){
-
-      console.log(error)
-
-      return {"message":"no se pudo eliminar [Migrate_log]", "code":2, "data":null}
     }
   }
 }

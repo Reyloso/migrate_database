@@ -26,10 +26,6 @@ export class CreateDatabaseDto {
     @MinLength(1)
     database_host:string
 
-    @IsString()
-    @MinLength(1)
-    migration_destination_table_name:string
-
     @IsNumber()
     @IsPositive()
     database_port:Number

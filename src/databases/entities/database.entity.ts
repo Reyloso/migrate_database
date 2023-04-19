@@ -80,7 +80,7 @@ export class Migratelog extends Model {
     id:string;
 
     @Column({
-        type: DataType.TEXT,
+        type: DataType.JSON,
         allowNull:false,
     })
     database:JSON

@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, Param, ParseUUIDPipe } from '@nestjs/common';
-import { CreateDatabaseDto, CreateMigrateLogDto } from './dto/create-database.dto';
-import { UpdateDatabaseDto, UpdateMigrateLogDto } from './dto/update-database.dto';
+import { CreateDatabaseDto } from './dto/create-database.dto';
+import { UpdateDatabaseDto } from './dto/update-database.dto';
 import { Database, Migratelog } from './entities/database.entity';
 import { Invoice } from 'src/invoices/entities/invoice.entity';
 import { InjectModel } from '@nestjs/sequelize';
@@ -136,10 +136,12 @@ export class MigrateService {
         host: `${database.database_host}`,
         dialect: `${database.database_engine}` as Dialect
       });
+
+      // se limpia el query de los backslash de escape
+      const extraction_query = database.extraction_query.replace(/\\/g, "");
       
       // ejecutando query de forma dinamica
-      const cursor = await sequelize_conection.query(database.extraction_query).then(([results, metadata]) => {
-        console.log("result ", results)
+      const cursor = await sequelize_conection.query(extraction_query).then(([results, metadata]) => {
         result =results
       }).catch(error => {
         console.error('Error executing query:', error);
@@ -151,6 +153,9 @@ export class MigrateService {
 
       // insertando nueva data 
       const invoices = await Invoice.bulkCreate(result)
+
+      //guardando log
+      const log = this.MigrateModel.create({ database:database.toJSON() })
 
       // se retorna el resultado
       return {"message":`Migracion Ejecutada Correctamente`, "code":1, "data":invoices}
@@ -166,7 +171,7 @@ export class MigrateService {
   async findAll() {
     try{
 
-      const migrateLog = await this.MigrateModel.findAll({where : {status:true, deleted_at:null}})
+      const migrateLog = await this.MigrateModel.findAll()
 
       if (migrateLog.length === 0){
         return {"message":"no se encontraron [Migrate_log]", "code":2, "data":null}
@@ -183,7 +188,7 @@ export class MigrateService {
   async findOne(@Param('id', ParseUUIDPipe) id:string) {
     try{
 
-      const migrateLog = await this.MigrateModel.findOne({where : {id: id, status:true, deleted_at:null}})
+      const migrateLog = await this.MigrateModel.findOne({where : {id: id}})
 
       if ( !migrateLog )
         return {"message":`no se encontro una [Migrate_log] con el id ${id}`, "code":2, "data":null}

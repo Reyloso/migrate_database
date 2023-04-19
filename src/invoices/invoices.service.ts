@@ -1,8 +1,9 @@
-import { Injectable, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Injectable, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
 import { Invoice } from './entities/invoice.entity';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class InvoicesService {
@@ -28,16 +29,41 @@ export class InvoicesService {
     }
   }
 
-  async findAll() {
+  async findAll(@Query() query: any) {
     try{
+      // paginacion y filtrado
+      const { page, pageSize, date_start, date_end } = query;
+      const limit = pageSize ? +pageSize : 10;
+      const offset = page ? (page - 1) * limit : 0;
+      const where: any = {};
 
-      const invoice = await this.InvoiceModel.findAll({where : {status:true, deleted_at:null}})
+      if (date_start && date_end) {
+        where.created_at = {
+          [Op.between]: [new Date(date_start), new Date(date_end)],
+        };
+      } else if (date_start) {
+        where.createdAt = { [Op.gte]: new Date(date_start) };
+      } else if (date_end) {
+        where.createdAt = { [Op.lte]: new Date(date_end) };
+      }
 
-      if (invoice.length === 0){
+      const { rows, count } = await this.InvoiceModel.findAndCountAll({ limit, offset , where});
+
+      const response = {
+        data: rows,
+        total: count,
+        page,
+        pageSize,
+        totalPages: Math.ceil(count / limit),
+        "message":"lista de [Invoices]",
+        "code":1,
+      };
+
+      if (response.total === 0){
         return {"message":"no se encontraron [Invoices]", "code":2, "data":null}
       }
 
-      return {"message":"lista de [Invoices]", "code":1, "data":invoice}
+      return response
 
     }catch(error){
 

@@ -1,14 +1,14 @@
  SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'Databases'
 
  
-SELECT iv."InvoiceId"
+SELECT  iv."InvoiceId"
 , iv."CustomerId"
 , concat(cu."FirstName",' ',cu."LastName") as "CustomerName"
 , iv."BillingCity"
 , iv."BillingCountry"
 , iv."BillingAddress"
 , round(iv."Total"*0.19,2) as "InvoiceTax"
-, iv."Total"
+, iv."Total" as "InvoiceTotal"
 , count(ivl."Quantity") as "InvoiceProductQuantity"
 , iv."InvoiceDate"
 FROM "Invoice"  iv 
@@ -17,3 +17,22 @@ INNER JOIN "Customer" cu
 INNER JOIN "InvoiceLine" ivl 
 	on iv."InvoiceId" = ivl."InvoiceId"
 GROUP BY iv."InvoiceId", "CustomerName"
+LIMIT 10
+
+
+SELECT  iv.\"InvoiceId\"
+, iv.\"CustomerId\"
+, concat(cu.\"FirstName\",' ',cu.\"LastName\") as \"CustomerName\"
+, iv.\"BillingCity\"
+, iv.\"BillingCountry\"
+, iv.\"BillingAddress\"
+, round(iv.\"Total\"*0.19,2) as \"InvoiceTax\"
+, iv.\"Total\" as \"InvoiceTotal\"
+, count(ivl.\"Quantity\") as \"InvoiceProductQuantity\"
+, iv.\"InvoiceDate\"
+FROM \"Invoice\"  iv 
+INNER JOIN \"Customer\" cu
+	ON cu.\"CustomerId\" = iv.\"CustomerId\"
+INNER JOIN \"InvoiceLine\" ivl 
+	on iv.\"InvoiceId\" = ivl.\"InvoiceId\"
+GROUP BY iv.\"InvoiceId\", \"CustomerName\"

@@ -12,8 +12,6 @@ export interface DatabaseInterface {
 
   database_host: string;
 
-  migration_destination_table_name: string;
-
   database_port: number;
 
   extraction_query: string;

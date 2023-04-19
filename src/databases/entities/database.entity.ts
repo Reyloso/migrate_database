@@ -49,13 +49,6 @@ export class Database extends Model {
     database_port:Number
 
     @Column({
-        type: 'VARCHAR(50)',
-        defaultValue:'invoices',
-        allowNull:false,
-    })
-    migration_destination_table_name:string
-
-    @Column({
         type: DataType.TEXT,
         allowNull:false
     })

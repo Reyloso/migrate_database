@@ -114,9 +114,6 @@ export class MigrateService {
     private readonly MigrateModel: typeof Migratelog,
     @InjectModel(Database)
     private readonly DatabaseModel: typeof Database,
-    // @InjectModel(Invoice)
-    // private readonly InvoiceModel: typeof Invoice,
-
   ){}
 
   async create(@Param('id_database', ParseUUIDPipe) id:string) {
@@ -150,14 +147,13 @@ export class MigrateService {
       });;
 
       // vaciando la tabla invoice para insertar los nuevos registros
-      await Invoice.destroy({
-        where: {},
-        truncate: true
-      })
+      await Invoice.destroy({where: {}, truncate: true})
+
       // insertando nueva data 
       const invoices = await Invoice.bulkCreate(result)
-  
-      return invoices;
+
+      // se retorna el resultado
+      return {"message":`Migracion Ejecutada Correctamente`, "code":1, "data":invoices}
 
     }catch(error){
 

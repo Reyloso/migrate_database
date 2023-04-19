@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, Param, ParseUUIDPipe } from '@nestjs/common';
 import { CreateDatabaseDto, CreateMigrateLogDto } from './dto/create-database.dto';
 import { UpdateDatabaseDto, UpdateMigrateLogDto } from './dto/update-database.dto';
-import { Database, MigrateLog } from './entities/database.entity';
+import { Database, Migratelog } from './entities/database.entity';
 import { InjectModel } from '@nestjs/sequelize';
 
 
@@ -107,8 +107,8 @@ export class DatabasesService {
 export class MigrateService {
 
   constructor(
-    @InjectModel(MigrateLog)
-    private readonly MigrateModel: typeof MigrateLog,
+    @InjectModel(Migratelog)
+    private readonly MigrateModel: typeof Migratelog,
 
   ){}
 

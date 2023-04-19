@@ -7,6 +7,9 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
+    "db:migrate": "yarn sequelize-cli db:migrate",
+    "db:drop": "yarn sequelize-cli db:drop",
+    "db:create": "yarn sequelize-cli db:create",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -34,6 +37,7 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "sequelize": "^6.31.0",
+    "sequelize-cli": "^6.6.0",
     "sequelize-typescript": "^2.1.5",
     "uuid": "^9.0.0"
   },

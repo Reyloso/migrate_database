@@ -2,12 +2,14 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { DatabasesModule } from './databases/databases.module';
+import { InvoicesModule } from './invoices/invoices.module';
+import { Dialect } from 'sequelize/types';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     SequelizeModule.forRoot({
-      dialect:'postgres',
+      dialect:'postgres' as Dialect,
       host: process.env.DB_HOST,
       port: +process.env.DB_PORT,
       database:process.env.DB_NAME,
@@ -15,8 +17,9 @@ import { DatabasesModule } from './databases/databases.module';
       username:process.env.DB_USERNAME,
       autoLoadModels:true,
       synchronize:true
-    }),
-    DatabasesModule
+  }),
+    DatabasesModule,
+    InvoicesModule
   ],
   controllers: [],
   providers: [],

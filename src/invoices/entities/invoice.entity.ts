@@ -4,14 +4,6 @@ import { v4 as uuid } from 'uuid';
 @Table
 export class Invoice extends Model {
 
-    @PrimaryKey
-    @Default(uuid)
-    @Column({
-        type: DataType.UUID,
-        defaultValue: uuid,
-    })
-    id:string;
-
     @Column({
         type: DataType.INTEGER,
         allowNull:false,

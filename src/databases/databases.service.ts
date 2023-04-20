@@ -48,7 +48,7 @@ export class DatabasesService {
     }
   }
   
-  async findOne(@Param('id', ParseUUIDPipe) id:string) {
+  async findOne(@Param('id') id:number) {
     try{
 
       const database = await this.DatabaseModel.findOne({where : {id: id, status:true, deleted_at:null}})
@@ -65,7 +65,7 @@ export class DatabasesService {
     }
   }
 
-  async update(@Param('id', ParseUUIDPipe) id:string, updateDatabaseDto: UpdateDatabaseDto) {
+  async update(@Param('id') id:number, updateDatabaseDto: UpdateDatabaseDto) {
     try{
 
       const database = await this.DatabaseModel.update(updateDatabaseDto ,{where : {id: id}});
@@ -84,7 +84,7 @@ export class DatabasesService {
     }
   }
   
-  async remove(@Param('id', ParseUUIDPipe) id:string) {
+  async remove(@Param('id') id:number) {
     try{
 
       const database = this.DatabaseModel.findOne({where : {id: id, deleted_at:null}})
@@ -116,15 +116,14 @@ export class MigrateService {
     private readonly DatabaseModel: typeof Database,
   ){}
 
-  async create(@Param('id_database', ParseUUIDPipe) id:string) {
+  async create(id:number) {
     try{
-      
       // consultando database en la base de datos
       const database = await this.DatabaseModel.findOne({where : {id: id, status:true, deleted_at:null}})
 
       // validando si existe el registro
       if(!database)
-        return {"message":`no se encontro una [Databse] con el id ${id} para realizar esta migracion`, "code":2, "data":null}
+        return {"message":`no se encontro una [Database] con el id ${id} para realizar esta migracion`, "code":2, "data":null}
 
       let result = []
 
@@ -185,7 +184,7 @@ export class MigrateService {
     }
   }
   
-  async findOne(@Param('id', ParseUUIDPipe) id:string) {
+  async findOne(@Param('id') id:number) {
     try{
 
       const migrateLog = await this.MigrateModel.findOne({where : {id: id}})

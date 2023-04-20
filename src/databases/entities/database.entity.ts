@@ -4,13 +4,6 @@ import { v4 as uuid } from 'uuid';
 @Table
 export class Database extends Model {
     
-    @PrimaryKey
-    @Default(uuid)
-    @Column({
-        type: DataType.UUID,
-        defaultValue: uuid,
-    })
-    id:string;
 
     @Column({
         type: 'VARCHAR(50)',
@@ -70,14 +63,6 @@ export class Database extends Model {
 
 @Table
 export class Migratelog extends Model {
-
-    @PrimaryKey
-    @Default(uuid)
-    @Column({
-        type: DataType.UUID,
-        defaultValue: uuid,
-    })
-    id:string;
 
     @Column({
         type: DataType.JSON,

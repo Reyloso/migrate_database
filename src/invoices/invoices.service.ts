@@ -1,4 +1,4 @@
-import { Injectable, Param, ParseUUIDPipe, Query } from '@nestjs/common';
+import { Injectable, Param, Query } from '@nestjs/common';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
 import { Invoice } from './entities/invoice.entity';
@@ -13,7 +13,6 @@ export class InvoicesService {
     private readonly InvoiceModel: typeof Invoice,
 
   ){}
-
 
   async create(createInvoiceDto: CreateInvoiceDto) {
     try{
@@ -71,7 +70,7 @@ export class InvoicesService {
     }
   }
 
-  async findOne(@Param('id', ParseUUIDPipe) id:string) {
+  async findOne(id:number) {
     try{
 
       const invoice = await this.InvoiceModel.findOne({where : {id: id, status:true, deleted_at:null}})
@@ -107,7 +106,7 @@ export class InvoicesService {
     }
   }
 
-  async remove(@Param('id', ParseUUIDPipe) id:string) {
+  async remove(id:number) {
     try{
 
       const database = this.InvoiceModel.findOne({where : {id: id, deleted_at:null}})

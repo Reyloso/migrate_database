@@ -2,10 +2,6 @@ import { IsBoolean, IsDate, IsIn, IsJSON, IsNumber, IsOptional, IsPositive, IsSt
 
 export class CreateDatabaseDto {
 
-    @IsUUID()
-    @IsOptional()
-    id?:string
-
     @IsIn(['postgres','mysql','sqlite','mssql'])
     @IsOptional()
     database_engine?:string
@@ -46,15 +42,11 @@ export class CreateDatabaseDto {
 
 export class CreateMigrateLogDto {
 
-    @IsUUID()
-    @IsOptional()
-    id?:string
-
     @IsJSON()
     database:JSON
 
     @IsDate()
     @IsOptional()
-    updated_at?:Date
+    created_at?:Date
 
 }
